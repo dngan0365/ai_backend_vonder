@@ -116,6 +116,9 @@ __pypackages__/
 celerybeat-schedule
 celerybeat.pid
 
+# Data for vector databases
+data/
+
 # SageMath parsed files
 *.sage.py
 
