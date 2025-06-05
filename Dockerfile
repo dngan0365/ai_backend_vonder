@@ -1,40 +1,29 @@
-# Base Python image
-FROM python:3.11-slim
+# Use official Python 3.12 slim image
+FROM python:3.12-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set working directory
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
     build-essential \
+    libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js (required for Prisma CLI)
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs
-
-# Install Prisma CLI globally
-RUN npm install -g prisma
-
-# Copy Python dependencies
-COPY pyproject.toml poetry.lock* requirements.txt* ./
-
-# Install Python dependencies (choose pip or poetry)
-# Using pip (adjust if using poetry)
+# Copy and install Python dependencies
+COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy application files
+# Copy all project files into the image
 COPY . .
 
-# Generate Prisma client
-RUN prisma generate
-
-# Run Prisma database migration (optional)
-# RUN prisma migrate deploy
-
-# Expose FastAPI port
+# Expose port (FastAPI default)
 EXPOSE 8000
 
-# Start FastAPI server
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start FastAPI using Uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3900"]
