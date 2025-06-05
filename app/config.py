@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     CLOUDINARY_CLOUD_NAME: str
     CLOUDINARY_API_KEY: str
     CLOUDINARY_API_SECRET: str
+    WEAVIATE_URL: str
+    WEAVIATE_API_KEY: str
+    TAVILY_API_KEY: str
     APP_NAME: str
     ENVIRONMENT: str
 

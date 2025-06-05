@@ -1,3 +1,4 @@
+import asyncio
 import os
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,11 +10,15 @@ from app.chatbot.router import router as chatbot_router
 from app.dashboard.router import router as dashboard_router
 from dotenv import load_dotenv
 import os
+import sys
+
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 # Load environment variables from the .env file
 load_dotenv()
 
 # Get the frontend URL from the environment variable
-frontend_url = os.getenv('FRONTEND_URL')
+frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
 # Add CORS middleware with the URL from .env
 origins = [frontend_url]  # Allow the specific frontend URL
@@ -28,7 +33,7 @@ app = FastAPI(
 # Setup CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"],  # In production, replace with specific origins
+    allow_origins = origins,  # In production, replace with specific origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
