@@ -2,6 +2,7 @@ import asyncio
 import os
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 from app.config import settings
 from app.db.prisma_client import initialize_prisma, close_prisma
@@ -58,3 +59,8 @@ async def shutdown():
 @app.get("/")
 async def root():
     return {"message": "Welcome to Travel Chatbot & Dashboard API"}
+
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("your_main_module:app", host="0.0.0.0", port=port)
